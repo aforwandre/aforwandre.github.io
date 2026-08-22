@@ -3,813 +3,120 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-<meta name="color-scheme" content="dark"/>
 <meta name="theme-color" content="#090b0e"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="MDX Scan"/>
-<meta name="mobile-web-app-capable" content="yes"/>
-<meta name="format-detection" content="telephone=no"/>
 <link rel="manifest" href="./manifest.webmanifest"/>
-<link rel="apple-touch-icon" href="./icon.svg"/>
 <link rel="icon" type="image/svg+xml" href="./icon.svg"/>
 <title>MDX Monitor · 獨立訊號板</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
-:root {
-  --bg:#090b0e; --surface:#11161c; --s2:#171e26; --s3:#1d2630;
-  --fg:#e8eef4; --muted:#8b97a6; --faint:#5c6774; --border:#24303c;
-  --accent:#5eead4; --buy:#3dcf9a; --sell:#f07178; --hold:#94a3b8; --warn:#e0b15b;
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-}
-* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-html,body { margin:0; background:var(--bg); color:var(--fg);
-  font-family:-apple-system,"SF Pro Text","IBM Plex Sans","Noto Sans TC",system-ui,sans-serif;
-  -webkit-text-size-adjust:100%; }
-body { min-height:100dvh; padding-bottom:calc(20px + var(--safe-bottom)); }
-a { color:var(--accent); text-decoration:none; }
-header {
-  position:sticky; top:0; z-index:20;
-  padding:calc(10px + var(--safe-top)) 16px 10px;
-  background:rgba(9,11,14,.92); backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border);
-  display:flex; align-items:center; justify-content:space-between; gap:12px;
-}
-.brand { display:flex; align-items:center; gap:10px; color:inherit; }
-.logo { width:32px; height:32px; border-radius:8px; background:var(--s2); display:grid; place-items:center; color:var(--accent); font-weight:700; }
-.brand b { display:block; font-size:14px; }
-.brand small { display:block; color:var(--muted); font-size:11px; }
-nav a { color:var(--muted); font-size:13px; margin-left:12px; }
-nav a.active, nav a:hover { color:var(--fg); }
-.wrap { max-width:1440px; margin:0 auto; padding:16px; }
-.pill { font-family:ui-monospace,SF Mono,monospace; font-size:11px; background:var(--s2); color:var(--muted); padding:4px 8px; border-radius:4px; }
-.regime, .panel { background:var(--surface); border-radius:18px; box-shadow:0 0 0 1px rgba(255,255,255,.07); padding:16px 18px; margin-bottom:16px; }
-.kicker { font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--faint); }
-.h { font-size:20px; font-weight:650; margin:4px 0; }
-.note { color:var(--muted); font-size:13px; }
-.snaps { display:flex; flex-wrap:wrap; gap:16px; font-family:ui-monospace,SF Mono,monospace; font-size:12px; margin-top:10px; }
-.snap .faint { color:var(--faint); font-size:11px; }
-.up { color:var(--buy); } .dn { color:var(--sell); } .flat { color:var(--muted); }
-.mono { font-family:ui-monospace,SF Mono,Menlo,monospace; }
-.muted { color:var(--muted); } .faint { color:var(--faint); }
-.table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
-table { width:100%; border-collapse:collapse; font-size:13px; min-width:920px; }
-th { text-align:left; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--faint); font-weight:500; padding:8px 8px; border-bottom:1px solid var(--border); }
-td { padding:10px 8px; border-bottom:1px solid rgba(36,48,60,.7); vertical-align:middle; }
-tr.idx { background:rgba(23,30,38,.5); }
-.sub { font-size:11px; color:var(--faint); }
-.badge { display:inline-flex; min-width:44px; height:22px; align-items:center; justify-content:center; border-radius:4px; font-size:11px; font-family:ui-monospace,SF Mono,monospace; padding:0 8px; }
-.sig-sbuy { background:var(--buy); color:#042f2e; }
-.sig-buy { background:rgba(61,207,154,.2); color:var(--buy); }
-.sig-hold { background:var(--s3); color:var(--hold); }
-.sig-sell { background:rgba(240,113,120,.2); color:var(--sell); }
-.sig-ssell { background:var(--sell); color:#fff; }
-.str { display:inline-block; width:64px; height:4px; background:var(--s3); border-radius:99px; overflow:hidden; margin-right:6px; vertical-align:middle; }
-.str i { display:block; height:100%; border-radius:99px; }
-.bg-buy { background:var(--buy); } .bg-sell { background:var(--sell); } .bg-hold { background:var(--hold); }
-.flag { display:inline-block; background:rgba(224,177,91,.15); color:var(--warn); font-size:10px; padding:2px 6px; border-radius:4px; font-family:ui-monospace,SF Mono,monospace; margin-right:4px; }
-.cards { display:none; }
-.head-row { display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap; align-items:end; margin-bottom:12px; }
-.guide { display:grid; gap:10px; grid-template-columns:1fr; margin-top:16px; padding-top:16px; border-top:1px solid var(--border); }
-@media (min-width:720px) { .guide { grid-template-columns:1fr 1fr; } }
-.g { background:var(--s2); border-radius:8px; padding:12px; }
-.g dt { font-family:ui-monospace,SF Mono,monospace; font-size:12px; color:var(--accent); }
-.g dd { margin:6px 0 0; font-size:13px; }
-.g dd.m { color:var(--muted); font-size:12px; line-height:1.55; }
-.foot { color:var(--faint); font-size:12px; line-height:1.6; margin-top:18px; }
-@media (max-width:860px) {
-  .table-wrap { display:none; }
-  .cards { display:grid; gap:8px; }
-  .card { background:var(--s2); border-radius:10px; padding:12px; }
-  .card-top { display:flex; justify-content:space-between; gap:8px; }
-  .card-row { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:8px; }
-  .reason { color:var(--muted); font-size:12px; margin-top:8px; }
-  .name { font-size:15px; }
-}
+:root{--bg:#090b0e;--fg:#e8eef4;--muted:#8b97a6;--faint:#5c6774;--surface:#11161c;--surface2:#171e26;--buy:#3dcf9a;--sell:#f07178;--hold:#94a3b8;--border:#24303c;--accent:#5eead4}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 "Noto Sans TC",sans-serif}
+header{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 16px;background:rgba(11,13,16,.92);border-bottom:1px solid var(--border);backdrop-filter:blur(10px)}
+h1{margin:0;font-size:18px;font-weight:600}
+.sub{color:var(--muted);font-size:12px;margin-top:2px}
+main{max-width:1200px;margin:0 auto;padding:16px}
+.card{background:var(--surface);border-radius:10px;padding:16px;margin-bottom:16px}
+.reg{font-size:22px;font-weight:600}
+.reg.risk_on,.buy{color:var(--buy)}
+.reg.risk_off,.reg.vol_spill,.sell{color:var(--sell)}
+.reg.neutral,.hold{color:var(--hold)}
+.snaps{display:flex;flex-wrap:wrap;gap:16px;margin-top:12px;font-family:"IBM Plex Mono",monospace;font-size:12px}
+.snaps .k{color:var(--faint)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;color:var(--faint);font-weight:500;padding:8px 6px;border-bottom:1px solid var(--border)}
+td{padding:8px 6px;border-bottom:1px solid var(--border);vertical-align:middle}
+.mono{font-family:"IBM Plex Mono",monospace}
+.badge{display:inline-flex;min-width:42px;justify-content:center;border-radius:4px;padding:2px 8px;font-family:"IBM Plex Mono",monospace;font-size:11px}
+.k-strong_buy{background:var(--buy);color:#062016}
+.k-buy{background:rgba(61,214,140,.18);color:var(--buy)}
+.k-hold{background:var(--surface2);color:var(--hold)}
+.k-sell{background:rgba(240,113,120,.18);color:var(--sell)}
+.k-strong_sell{background:var(--sell);color:#1a0608}
+.alert{display:inline-block;margin:0 4px 4px 0;padding:1px 6px;border-radius:4px;background:var(--surface2);color:var(--muted);font-size:10px;font-family:"IBM Plex Mono",monospace}
+.bar{display:inline-block;width:64px;height:4px;background:var(--surface2);border-radius:99px;overflow:hidden;vertical-align:middle;margin-right:6px}
+.bar>i{display:block;height:100%}
+.note{color:var(--muted);font-size:12px;max-width:52rem}
+.foot{color:var(--faint);font-size:11px;padding:8px 16px 24px}
+a{color:var(--buy)}
+@media(max-width:720px){.hide-sm{display:none}}
 </style>
 </head>
 <body>
 <header>
-  <a class="brand" href="./">
-    <span class="logo">M</span>
-    <span><b>MDX Monitor</b><small>港股獨立監測 · 靜態副本</small></span>
-  </a>
-  <nav>
-    <a class="active" href="./">訊號板</a>
-    <a href="./formulas.html">公式</a>
-    <a href="./sources.html">數據源</a>
-    <a href="https://stone-leaf-finch-crane.grok.me" rel="noopener">即時版</a>
-  </nav>
+  <div>
+    <h1>獨立訊號板</h1>
+    <div class="sub" id="sub">三大指數 + 25 隻獨立計算 · 日線 MDX</div>
+  </div>
+  <nav class="sub"><a href="./formulas.html">公式</a> · <a href="./sources.html">數據源</a></nav>
 </header>
-<div class="wrap">
-  <div class="regime">
-    <div class="kicker">市場 Regime</div>
-    <div class="h up">風險偏好 <span class="note">Risk-on</span></div>
-    <p class="note">北向風格代理：指數走強且波動受控</p>
-    <div class="snaps">
-      <div class="snap">
-      <div class="faint">恒生指數</div>
-      <div class="mono">26,009.46 <span class="up">+1.21%</span></div>
-    </div><div class="snap">
-      <div class="faint">國企指數</div>
-      <div class="mono">8,634.34 <span class="up">+1.01%</span></div>
-    </div><div class="snap">
-      <div class="faint">科技指數</div>
-      <div class="mono">4,766.16 <span class="up">+1.40%</span></div>
-    </div>
-      <div class="snap"><div class="faint">Vol 20/60</div><div class="mono">13.9 / 18.8</div></div>
-      <div class="snap"><div class="faint">籃子上漲比</div><div class="mono">89%</div></div>
-      <div class="snap"><div class="faint">信心</div><div class="mono">70</div></div>
-    </div>
-  </div>
-
-  <section class="panel">
-    <div class="head-row">
-      <div>
-        <h1 class="h" style="margin:0">獨立訊號板</h1>
-        <p class="note">三大指數 + 25 隻獨立計算 · 日線 MDX · 行情截至 2026-08-21 18:31 HKT</p>
-      </div>
-      <span class="pill">收市快照 · 港股未開市無需更新</span>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr>
-          <th>代碼</th><th>名稱</th><th>現價</th><th>漲跌</th><th>訊號</th><th>強度</th><th>%B</th><th>RSI</th><th>提示</th><th>買/賣</th>
-        </tr></thead>
-        <tbody>
-          <tr class=" idx">
-  <td class="mono muted">HSI</td>
-  <td><div>恒生指數</div><div class="sub">指數</div></td>
-  <td class="mono">26,009.46</td>
-  <td class="mono up">+1.21%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-hold" style="width:32%"></i></span><span class="mono muted">32</span></td>
-  <td class="mono muted">0.98</td>
-  <td class="mono muted">62</td>
-  <td><span class="flag">擠壓</span></td>
-  <td class="mono faint">— / —</td>
-</tr><tr class=" idx">
-  <td class="mono muted">HSCEI</td>
-  <td><div>國企指數</div><div class="sub">指數</div></td>
-  <td class="mono">8,634.34</td>
-  <td class="mono up">+1.01%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-hold" style="width:46%"></i></span><span class="mono muted">46</span></td>
-  <td class="mono muted">0.92</td>
-  <td class="mono muted">61</td>
-  <td><span class="flag">擠壓</span></td>
-  <td class="mono faint">— / —</td>
-</tr><tr class=" idx">
-  <td class="mono muted">HSTECH</td>
-  <td><div>科技指數</div><div class="sub">指數</div></td>
-  <td class="mono">4,766.16</td>
-  <td class="mono up">+1.40%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-hold" style="width:42%"></i></span><span class="mono muted">42</span></td>
-  <td class="mono muted">0.50</td>
-  <td class="mono muted">50</td>
-  <td><span class="flag">擠壓</span></td>
-  <td class="mono faint">2026-03-24 / 2026-05-12</td>
-</tr><tr class="">
-  <td class="mono muted">5</td>
-  <td><div>滙豐控股</div><div class="sub">金融</div></td>
-  <td class="mono">162.90</td>
-  <td class="mono up">+1.62%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-hold" style="width:56%"></i></span><span class="mono muted">56</span></td>
-  <td class="mono muted">0.72</td>
-  <td class="mono muted">57</td>
-  <td><span class="muted">—</span></td>
-  <td class="mono faint">— / —</td>
-</tr><tr class="">
-  <td class="mono muted">2318</td>
-  <td><div>中國平安</div><div class="sub">金融</div></td>
-  <td class="mono">56.200</td>
-  <td class="mono up">+3.88%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-hold" style="width:58%"></i></span><span class="mono muted">58</span></td>
-  <td class="mono muted">0.61</td>
-  <td class="mono muted">53</td>
-  <td><span class="muted">—</span></td>
-  <td class="mono faint">2026-03-25 / 2026-05-11</td>
-</tr><tr class="">
-  <td class="mono muted">2628</td>
-  <td><div>中國人壽</div><div class="sub">金融</div></td>
-  <td class="mono">28.060</td>
-  <td class="mono up">+5.09%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-buy" style="width:70%"></i></span><span class="mono muted">70</span></td>
-  <td class="mono muted">0.59</td>
-  <td class="mono muted">51</td>
-  <td><span class="muted">—</span></td>
-  <td class="mono faint">2026-03-25 / 2026-05-12</td>
-</tr><tr class="">
-  <td class="mono muted">700</td>
-  <td><div>騰訊控股</div><div class="sub">互聯網</div></td>
-  <td class="mono">457.00</td>
-  <td class="mono up">+1.24%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-buy" style="width:72%"></i></span><span class="mono muted">72</span></td>
-  <td class="mono muted">0.48</td>
-  <td class="mono muted">49</td>
-  <td><span class="muted">—</span></td>
-  <td class="mono faint">2026-04-29 / 2026-06-15</td>
-</tr><tr class="">
-  <td class="mono muted">1024</td>
-  <td><div>快手-W</div><div class="sub">互聯網</div></td>
-  <td class="mono">34.420</td>
-  <td class="mono up">+2.32%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-buy" style="width:82%"></i></span><span class="mono muted">82</span></td>
-  <td class="mono muted">-0.16</td>
-  <td class="mono muted">27</td>
-  <td><span class="muted">—</span></td>
-  <td class="mono faint">2026-06-29 / 2026-08-03</td>
-</tr><tr class="">
-  <td class="mono muted">992</td>
-  <td><div>聯想集團</div><div class="sub">科技硬件</div></td>
-  <td class="mono">29.780</td>
-  <td class="mono up">+0.20%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-hold" style="width:57%"></i></span><span class="mono muted">57</span></td>
-  <td class="mono muted">0.64</td>
-  <td class="mono muted">58</td>
-  <td><span class="muted">—</span></td>
-  <td class="mono faint">2025-11-20 / 2025-05-07</td>
-</tr><tr class="">
-  <td class="mono muted">981</td>
-  <td><div>中芯國際</div><div class="sub">半導體</div></td>
-  <td class="mono">72.500</td>
-  <td class="mono up">+0.55%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-hold" style="width:45%"></i></span><span class="mono muted">45</span></td>
-  <td class="mono muted">0.63</td>
-  <td class="mono muted">53</td>
-  <td><span class="muted">—</span></td>
-  <td class="mono faint">2026-03-24 / 2026-06-01</td>
-</tr><tr class="">
-  <td class="mono muted">1347</td>
-  <td><div>華虹半導體</div><div class="sub">半導體</div></td>
-  <td class="mono">114.80</td>
-  <td class="mono up">+2.59%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-buy" style="width:81%"></i></span><span class="mono muted">81</span></td>
-  <td class="mono muted">0.05</td>
-  <td class="mono muted">38</td>
-  <td><span class="flag">擠壓</span></td>
-  <td class="mono faint">— / —</td>
-</tr><tr class="">
-  <td class="mono muted">9988</td>
-  <td><div>阿里巴巴-W</div><div class="sub">互聯網</div></td>
-  <td class="mono">123.00</td>
-  <td class="mono dn">-2.54%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-hold" style="width:34%"></i></span><span class="mono muted">34</span></td>
-  <td class="mono muted">0.59</td>
-  <td class="mono muted">55</td>
-  <td><span class="muted">—</span></td>
-  <td class="mono faint">2026-06-29 / 2026-08-06</td>
-</tr><tr class="">
-  <td class="mono muted">9888</td>
-  <td><div>百度集團-SW</div><div class="sub">互聯網</div></td>
-  <td class="mono">93.200</td>
-  <td class="mono up">+1.14%</td>
-  <td><span class="badge sig-sbuy">強買</span></td>
-  <td><span class="str"><i class="bg-buy" style="width:95%"></i></span><span class="mono muted">95</span></td>
-  <td class="mono muted">0.03</td>
-  <td class="mono muted">35</td>
-  <td><span class="muted">—</span></td>
-  <td class="mono faint">2026-08-20 / 2026-05-12</td>
-</tr><tr class="">
-  <td class="mono muted">6030</td>
-  <td><div>中信證券</div><div class="sub">金融</div></td>
-  <td class="mono">26.240</td>
-  <td class="mono up">+1.47%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-buy" style="width:82%"></i></span><span class="mono muted">82</span></td>
-  <td class="mono muted">0.27</td>
-  <td class="mono muted">43</td>
-  <td><span class="flag">擠壓</span></td>
-  <td class="mono faint">2026-03-10 / 2026-05-07</td>
-</tr><tr class="">
-  <td class="mono muted">3908</td>
-  <td><div>中金公司</div><div class="sub">金融</div></td>
-  <td class="mono">21.040</td>
-  <td class="mono up">+2.53%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-buy" style="width:80%"></i></span><span class="mono muted">80</span></td>
-  <td class="mono muted">0.41</td>
-  <td class="mono muted">48</td>
-  <td><span class="flag">擠壓</span></td>
-  <td class="mono faint">2026-03-25 / 2026-04-13</td>
-</tr><tr class="">
-  <td class="mono muted">3690</td>
-  <td><div>美團-W</div><div class="sub">互聯網</div></td>
-  <td class="mono">85.000</td>
-  <td class="mono dn">-0.99%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-buy" style="width:77%"></i></span><span class="mono muted">77</span></td>
-  <td class="mono muted">0.23</td>
-  <td class="mono muted">44</td>
-  <td><span class="muted">—</span></td>
-  <td class="mono faint">2026-06-29 / 2026-03-27</td>
-</tr><tr class="">
-  <td class="mono muted">1299</td>
-  <td><div>友邦保險</div><div class="sub">金融</div></td>
-  <td class="mono">75.150</td>
-  <td class="mono up">+3.30%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-hold" style="width:46%"></i></span><span class="mono muted">46</span></td>
-  <td class="mono muted">0.59</td>
-  <td class="mono muted">52</td>
-  <td><span class="muted">—</span></td>
-  <td class="mono faint">2026-06-11 / 2026-07-15</td>
-</tr><tr class="">
-  <td class="mono muted">1211</td>
-  <td><div>比亞迪股份</div><div class="sub">汽車</div></td>
-  <td class="mono">93.150</td>
-  <td class="mono up">+1.47%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-hold" style="width:48%"></i></span><span class="mono muted">48</span></td>
-  <td class="mono muted">0.81</td>
-  <td class="mono muted">59</td>
-  <td><span class="flag">磨貨</span></td>
-  <td class="mono faint">2026-06-12 / 2026-07-31</td>
-</tr><tr class="">
-  <td class="mono muted">1810</td>
-  <td><div>小米集團-W</div><div class="sub">科技硬件</div></td>
-  <td class="mono">29.020</td>
-  <td class="mono up">+4.54%</td>
-  <td><span class="badge sig-buy">買入</span></td>
-  <td><span class="str"><i class="bg-buy" style="width:76%"></i></span><span class="mono muted">76</span></td>
-  <td class="mono muted">0.85</td>
-  <td class="mono muted">61</td>
-  <td><span class="flag">續升</span></td>
-  <td class="mono faint">2026-07-02 / 2026-07-17</td>
-</tr><tr class="">
-  <td class="mono muted">688</td>
-  <td><div>中國海外發展</div><div class="sub">地產</div></td>
-  <td class="mono">14.100</td>
-  <td class="mono dn">-0.35%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-hold" style="width:53%"></i></span><span class="mono muted">53</span></td>
-  <td class="mono muted">0.86</td>
-  <td class="mono muted">62</td>
-  <td><span class="flag">擠壓</span></td>
-  <td class="mono faint">2026-04-01 / 2026-06-03</td>
-</tr><tr class="">
-  <td class="mono muted">388</td>
-  <td><div>香港交易所</div><div class="sub">金融</div></td>
-  <td class="mono">421.00</td>
-  <td class="mono up">+0.77%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-hold" style="width:42%"></i></span><span class="mono muted">42</span></td>
-  <td class="mono muted">1.09</td>
-  <td class="mono muted">67</td>
-  <td><span class="flag">擠壓</span></td>
-  <td class="mono faint">— / —</td>
-</tr><tr class="">
-  <td class="mono muted">9999</td>
-  <td><div>網易-S</div><div class="sub">互聯網</div></td>
-  <td class="mono">202.00</td>
-  <td class="mono up">+4.45%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-hold" style="width:69%"></i></span><span class="mono muted">69</span></td>
-  <td class="mono muted">0.66</td>
-  <td class="mono muted">54</td>
-  <td><span class="muted">—</span></td>
-  <td class="mono faint">2026-02-16 / —</td>
-</tr><tr class="">
-  <td class="mono muted">386</td>
-  <td><div>中國石油化工</div><div class="sub">能源</div></td>
-  <td class="mono">4.405</td>
-  <td class="mono up">+0.80%</td>
-  <td><span class="badge sig-buy">買入</span></td>
-  <td><span class="str"><i class="bg-buy" style="width:75%"></i></span><span class="mono muted">75</span></td>
-  <td class="mono muted">0.85</td>
-  <td class="mono muted">60</td>
-  <td><span class="flag">擠壓</span> <span class="flag">續升</span></td>
-  <td class="mono faint">— / —</td>
-</tr><tr class="">
-  <td class="mono muted">883</td>
-  <td><div>中國海洋石油</div><div class="sub">能源</div></td>
-  <td class="mono">25.180</td>
-  <td class="mono up">+2.11%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-hold" style="width:37%"></i></span><span class="mono muted">37</span></td>
-  <td class="mono muted">1.06</td>
-  <td class="mono muted">66</td>
-  <td><span class="flag">磨貨</span></td>
-  <td class="mono faint">2025-04-08 / 2025-05-12</td>
-</tr><tr class="">
-  <td class="mono muted">857</td>
-  <td><div>中國石油股份</div><div class="sub">能源</div></td>
-  <td class="mono">10.130</td>
-  <td class="mono up">+1.00%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-hold" style="width:39%"></i></span><span class="mono muted">39</span></td>
-  <td class="mono muted">0.94</td>
-  <td class="mono muted">62</td>
-  <td><span class="muted">—</span></td>
-  <td class="mono faint">— / —</td>
-</tr><tr class="">
-  <td class="mono muted">2269</td>
-  <td><div>藥明生物</div><div class="sub">醫療</div></td>
-  <td class="mono">51.000</td>
-  <td class="mono up">+2.74%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-hold" style="width:43%"></i></span><span class="mono muted">43</span></td>
-  <td class="mono muted">1.05</td>
-  <td class="mono muted">80</td>
-  <td><span class="muted">—</span></td>
-  <td class="mono faint">2025-04-10 / 2026-07-07</td>
-</tr><tr class="">
-  <td class="mono muted">1209</td>
-  <td><div>華潤萬象生活</div><div class="sub">地產</div></td>
-  <td class="mono">41.200</td>
-  <td class="mono up">+1.33%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-hold" style="width:59%"></i></span><span class="mono muted">59</span></td>
-  <td class="mono muted">0.85</td>
-  <td class="mono muted">59</td>
-  <td><span class="flag">擠壓</span></td>
-  <td class="mono faint">2026-06-29 / 2026-08-04</td>
-</tr><tr class="">
-  <td class="mono muted">941</td>
-  <td><div>中國移動</div><div class="sub">電訊</div></td>
-  <td class="mono">82.800</td>
-  <td class="mono up">+0.49%</td>
-  <td><span class="badge sig-hold">持有</span></td>
-  <td><span class="str"><i class="bg-hold" style="width:55%"></i></span><span class="mono muted">55</span></td>
-  <td class="mono muted">0.73</td>
-  <td class="mono muted">59</td>
-  <td><span class="muted">—</span></td>
-  <td class="mono faint">— / —</td>
-</tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="cards"><article class="card idx">
-  <div class="card-top">
-    <div><div class="name">恒生指數</div><div class="sub mono">HSI · 指數</div></div>
-    <div class="right"><div class="mono px">26,009.46</div><div class="mono up">+1.21%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-hold" style="width:32%"></i></span>
-    <span class="mono muted">%B 0.98</span>
-    <span class="flag">擠壓</span>
-  </div>
-  <div class="reason">高位通道、空頭因子佔優 · 等待突破</div>
-</article><article class="card idx">
-  <div class="card-top">
-    <div><div class="name">國企指數</div><div class="sub mono">HSCEI · 指數</div></div>
-    <div class="right"><div class="mono px">8,634.34</div><div class="mono up">+1.01%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-hold" style="width:46%"></i></span>
-    <span class="mono muted">%B 0.92</span>
-    <span class="flag">擠壓</span>
-  </div>
-  <div class="reason">訊號介於門檻之間 · 等待突破</div>
-</article><article class="card idx">
-  <div class="card-top">
-    <div><div class="name">科技指數</div><div class="sub mono">HSTECH · 指數</div></div>
-    <div class="right"><div class="mono px">4,766.16</div><div class="mono up">+1.40%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-hold" style="width:42%"></i></span>
-    <span class="mono muted">%B 0.50</span>
-    <span class="flag">擠壓</span>
-  </div>
-  <div class="reason">訊號介於門檻之間 · 等待突破</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">滙豐控股</div><div class="sub mono">5 · 金融</div></div>
-    <div class="right"><div class="mono px">162.90</div><div class="mono up">+1.62%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-hold" style="width:56%"></i></span>
-    <span class="mono muted">%B 0.72</span>
-    <span class="muted">—</span>
-  </div>
-  <div class="reason">訊號介於門檻之間 · 觀察 1–5 日</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">中國平安</div><div class="sub mono">2318 · 金融</div></div>
-    <div class="right"><div class="mono px">56.200</div><div class="mono up">+3.88%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-hold" style="width:58%"></i></span>
-    <span class="mono muted">%B 0.61</span>
-    <span class="muted">—</span>
-  </div>
-  <div class="reason">訊號介於門檻之間 · 觀察 1–5 日</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">中國人壽</div><div class="sub mono">2628 · 金融</div></div>
-    <div class="right"><div class="mono px">28.060</div><div class="mono up">+5.09%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-buy" style="width:70%"></i></span>
-    <span class="mono muted">%B 0.59</span>
-    <span class="muted">—</span>
-  </div>
-  <div class="reason">訊號介於門檻之間 · 觀察 1–5 日</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">騰訊控股</div><div class="sub mono">700 · 互聯網</div></div>
-    <div class="right"><div class="mono px">457.00</div><div class="mono up">+1.24%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-buy" style="width:72%"></i></span>
-    <span class="mono muted">%B 0.48</span>
-    <span class="muted">—</span>
-  </div>
-  <div class="reason">訊號介於門檻之間 · 觀察 1–5 日</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">快手-W</div><div class="sub mono">1024 · 互聯網</div></div>
-    <div class="right"><div class="mono px">34.420</div><div class="mono up">+2.32%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-buy" style="width:82%"></i></span>
-    <span class="mono muted">%B -0.16</span>
-    <span class="muted">—</span>
-  </div>
-  <div class="reason">低位通道、多頭因子佔優 · 觀察 1–5 日</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">聯想集團</div><div class="sub mono">992 · 科技硬件</div></div>
-    <div class="right"><div class="mono px">29.780</div><div class="mono up">+0.20%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-hold" style="width:57%"></i></span>
-    <span class="mono muted">%B 0.64</span>
-    <span class="muted">—</span>
-  </div>
-  <div class="reason">訊號介於門檻之間 · 觀察 1–5 日</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">中芯國際</div><div class="sub mono">981 · 半導體</div></div>
-    <div class="right"><div class="mono px">72.500</div><div class="mono up">+0.55%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-hold" style="width:45%"></i></span>
-    <span class="mono muted">%B 0.63</span>
-    <span class="muted">—</span>
-  </div>
-  <div class="reason">訊號介於門檻之間 · 觀察 1–5 日</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">華虹半導體</div><div class="sub mono">1347 · 半導體</div></div>
-    <div class="right"><div class="mono px">114.80</div><div class="mono up">+2.59%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-buy" style="width:81%"></i></span>
-    <span class="mono muted">%B 0.05</span>
-    <span class="flag">擠壓</span>
-  </div>
-  <div class="reason">低位通道、多頭因子佔優 · 等待突破</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">阿里巴巴-W</div><div class="sub mono">9988 · 互聯網</div></div>
-    <div class="right"><div class="mono px">123.00</div><div class="mono dn">-2.54%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-hold" style="width:34%"></i></span>
-    <span class="mono muted">%B 0.59</span>
-    <span class="muted">—</span>
-  </div>
-  <div class="reason">訊號介於門檻之間 · 觀察 1–5 日</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">百度集團-SW</div><div class="sub mono">9888 · 互聯網</div></div>
-    <div class="right"><div class="mono px">93.200</div><div class="mono up">+1.14%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-sbuy">強買</span>
-    <span class="str"><i class="bg-buy" style="width:95%"></i></span>
-    <span class="mono muted">%B 0.03</span>
-    <span class="muted">—</span>
-  </div>
-  <div class="reason">MDX 底部買入窗（BOT + 冷卻） · 短線 1–7 日</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">中信證券</div><div class="sub mono">6030 · 金融</div></div>
-    <div class="right"><div class="mono px">26.240</div><div class="mono up">+1.47%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-buy" style="width:82%"></i></span>
-    <span class="mono muted">%B 0.27</span>
-    <span class="flag">擠壓</span>
-  </div>
-  <div class="reason">低位通道、多頭因子佔優 · 等待突破</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">中金公司</div><div class="sub mono">3908 · 金融</div></div>
-    <div class="right"><div class="mono px">21.040</div><div class="mono up">+2.53%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-buy" style="width:80%"></i></span>
-    <span class="mono muted">%B 0.41</span>
-    <span class="flag">擠壓</span>
-  </div>
-  <div class="reason">訊號介於門檻之間 · 等待突破</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">美團-W</div><div class="sub mono">3690 · 互聯網</div></div>
-    <div class="right"><div class="mono px">85.000</div><div class="mono dn">-0.99%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-buy" style="width:77%"></i></span>
-    <span class="mono muted">%B 0.23</span>
-    <span class="muted">—</span>
-  </div>
-  <div class="reason">低位通道、多頭因子佔優 · 觀察 1–5 日</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">友邦保險</div><div class="sub mono">1299 · 金融</div></div>
-    <div class="right"><div class="mono px">75.150</div><div class="mono up">+3.30%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-hold" style="width:46%"></i></span>
-    <span class="mono muted">%B 0.59</span>
-    <span class="muted">—</span>
-  </div>
-  <div class="reason">訊號介於門檻之間 · 觀察 1–5 日</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">比亞迪股份</div><div class="sub mono">1211 · 汽車</div></div>
-    <div class="right"><div class="mono px">93.150</div><div class="mono up">+1.47%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-hold" style="width:48%"></i></span>
-    <span class="mono muted">%B 0.81</span>
-    <span class="flag">磨貨</span>
-  </div>
-  <div class="reason">訊號介於門檻之間 · 觀察 1–5 日</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">小米集團-W</div><div class="sub mono">1810 · 科技硬件</div></div>
-    <div class="right"><div class="mono px">29.020</div><div class="mono up">+4.54%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-buy">買入</span>
-    <span class="str"><i class="bg-buy" style="width:76%"></i></span>
-    <span class="mono muted">%B 0.85</span>
-    <span class="flag">續升</span>
-  </div>
-  <div class="reason">趨勢續升（MACD 翻正 + 資金流入） · 短線 1–7 日</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">中國海外發展</div><div class="sub mono">688 · 地產</div></div>
-    <div class="right"><div class="mono px">14.100</div><div class="mono dn">-0.35%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-hold" style="width:53%"></i></span>
-    <span class="mono muted">%B 0.86</span>
-    <span class="flag">擠壓</span>
-  </div>
-  <div class="reason">訊號介於門檻之間 · 等待突破</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">香港交易所</div><div class="sub mono">388 · 金融</div></div>
-    <div class="right"><div class="mono px">421.00</div><div class="mono up">+0.77%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-hold" style="width:42%"></i></span>
-    <span class="mono muted">%B 1.09</span>
-    <span class="flag">擠壓</span>
-  </div>
-  <div class="reason">訊號介於門檻之間 · 等待突破</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">網易-S</div><div class="sub mono">9999 · 互聯網</div></div>
-    <div class="right"><div class="mono px">202.00</div><div class="mono up">+4.45%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-hold" style="width:69%"></i></span>
-    <span class="mono muted">%B 0.66</span>
-    <span class="muted">—</span>
-  </div>
-  <div class="reason">訊號介於門檻之間 · 觀察 1–5 日</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">中國石油化工</div><div class="sub mono">386 · 能源</div></div>
-    <div class="right"><div class="mono px">4.405</div><div class="mono up">+0.80%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-buy">買入</span>
-    <span class="str"><i class="bg-buy" style="width:75%"></i></span>
-    <span class="mono muted">%B 0.85</span>
-    <span class="flag">擠壓</span> <span class="flag">續升</span>
-  </div>
-  <div class="reason">趨勢續升（MACD 翻正 + 資金流入） · 短線 1–7 日</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">中國海洋石油</div><div class="sub mono">883 · 能源</div></div>
-    <div class="right"><div class="mono px">25.180</div><div class="mono up">+2.11%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-hold" style="width:37%"></i></span>
-    <span class="mono muted">%B 1.06</span>
-    <span class="flag">磨貨</span>
-  </div>
-  <div class="reason">高位通道、空頭因子佔優 · 觀察 1–5 日</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">中國石油股份</div><div class="sub mono">857 · 能源</div></div>
-    <div class="right"><div class="mono px">10.130</div><div class="mono up">+1.00%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-hold" style="width:39%"></i></span>
-    <span class="mono muted">%B 0.94</span>
-    <span class="muted">—</span>
-  </div>
-  <div class="reason">高位通道、空頭因子佔優 · 觀察 1–5 日</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">藥明生物</div><div class="sub mono">2269 · 醫療</div></div>
-    <div class="right"><div class="mono px">51.000</div><div class="mono up">+2.74%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-hold" style="width:43%"></i></span>
-    <span class="mono muted">%B 1.05</span>
-    <span class="muted">—</span>
-  </div>
-  <div class="reason">訊號介於門檻之間 · 觀察 1–5 日</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">華潤萬象生活</div><div class="sub mono">1209 · 地產</div></div>
-    <div class="right"><div class="mono px">41.200</div><div class="mono up">+1.33%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-hold" style="width:59%"></i></span>
-    <span class="mono muted">%B 0.85</span>
-    <span class="flag">擠壓</span>
-  </div>
-  <div class="reason">訊號介於門檻之間 · 等待突破</div>
-</article><article class="card">
-  <div class="card-top">
-    <div><div class="name">中國移動</div><div class="sub mono">941 · 電訊</div></div>
-    <div class="right"><div class="mono px">82.800</div><div class="mono up">+0.49%</div></div>
-  </div>
-  <div class="card-row">
-    <span class="badge sig-hold">持有</span>
-    <span class="str"><i class="bg-hold" style="width:55%"></i></span>
-    <span class="mono muted">%B 0.73</span>
-    <span class="muted">—</span>
-  </div>
-  <div class="reason">訊號介於門檻之間 · 觀察 1–5 日</div>
-</article></div>
-
-    <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
-      <h2 style="font-size:14px;margin:0 0 4px">欄位定義</h2>
-      <p class="note">每股獨立計算。以下數字與旗標皆為觀察值，不是投資建議。</p>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0">
-        <span class="badge sig-sbuy">強買</span>
-        <span class="badge sig-buy">買入</span>
-        <span class="badge sig-hold">持有</span>
-        <span class="badge sig-sell">賣出</span>
-        <span class="badge sig-ssell">強賣</span>
-      </div>
-      <div class="guide">
-        <div class="g"><dt>訊號</dt><dd>該股獨立的 MDX 結論，五檔之一。</dd><dd class="m">強買／買入來自底部 BOT 買入窗（冷卻期內不重複）。賣出／強賣來自 VS 上穿賣出門檻。持有代表尚未觸發窗口。恒指 regime 只調整門檻，不會把多隻股票合成一個組合訊號。</dd></div>
-        <div class="g"><dt>強度</dt><dd>0–100 的確信度，不是目標價、也不是倉位%。</dd><dd class="m">≥70 偏多，≤30 偏空，中段為持有。由 VB／VS 差與通道位置計算。</dd></div>
-        <div class="g"><dt>%B</dt><dd>收市價在 MDX 通道（DN–UP）裡的相對位置。</dd><dd class="m">公式：(收市 − DN) ÷ (UP − DN)。0.5 貼中軌；接近 0 在下軌；接近 1 在上軌。</dd></div>
-        <div class="g"><dt>提示</dt><dd>K 線結構旗標，可與訊號同時出現。</dd><dd class="m">洗籌、散貨／磨貨、逆轉↑／↓、擠壓、續升。「—」代表當根沒有旗標。</dd></div>
-      </div>
-    </div>
+<main>
+  <section class="card" id="regime"></section>
+  <section class="card" style="overflow-x:auto">
+    <table>
+      <thead>
+        <tr>
+          <th>代碼</th><th>名稱</th><th>現價</th><th>漲跌</th><th>訊號</th>
+          <th>強度</th><th class="hide-sm">%B</th><th class="hide-sm">RSI</th>
+          <th class="hide-sm">標記</th><th class="hide-sm">近買</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
   </section>
-  <p class="foot">
-    靜態副本對應 <a href="https://stone-leaf-finch-crane.grok.me">stone-leaf-finch-crane.grok.me</a>
-    · 行情截至 2026-08-21 18:31 HKT（上一個港股交易時段）。非投資建議。<br/>
-    路徑：<span class="mono">aforwandre.github.io/Andre/MDX_Scan/</span>
-  </p>
-</div>
+  <p class="foot" id="foot"></p>
+</main>
+<script type="application/json" id="board">{"asOf":"2026-08-21","publishedAt":"2026-08-23 02:18 HKT","updatedAt":1787422729138,"regime":{"id":"risk_on","labelZh":"風險偏好","labelEn":"Risk on","note":"恒指在 EMA60 上、籃子過半上漲；只調整強度，不合成組合訊號。","hsiVol20":14.0,"hsiVol60":18.8,"breadth":0.88,"confidence":68},"snapshots":[{"ticker":"HSI.HI","name":"恒生指數","nameEn":"HSI","last":26009.4609,"chgPct":1.2101},{"ticker":"HSCEI.HI","name":"國企指數","nameEn":"HSCEI","last":8634.3398,"chgPct":1.012},{"ticker":"HSTECH.HI","name":"科技指數","nameEn":"HSTECH","last":4766.1602,"chgPct":0.5551}],"rows":[{"ticker":"HSI.HI","name":"恒生指數","nameEn":"HSI","sector":"指數","last":26009.4609,"chgPct":1.2101,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":40,"alerts":[],"reason":"持有／升勢","holdHint":"升勢／觀望，尚未觸發買／賣窗","raw":{"pctb":0.9773,"vb":3.0,"vs":3.0,"rsi":61.91}},"pctb":0.9773,"vb":3.0,"vs":3.0,"rsi":61.91,"upt":true,"lastBuyAt":null,"lastSellAt":null,"source":"Yahoo"},{"ticker":"HSCEI.HI","name":"國企指數","nameEn":"HSCEI","sector":"指數","last":8634.3398,"chgPct":1.012,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":42,"alerts":[],"reason":"持有／升勢","holdHint":"升勢／觀望，尚未觸發買／賣窗","raw":{"pctb":0.9199,"vb":3.0,"vs":3.0,"rsi":60.59}},"pctb":0.9199,"vb":3.0,"vs":3.0,"rsi":60.59,"upt":true,"lastBuyAt":null,"lastSellAt":null,"source":"Yahoo"},{"ticker":"HSTECH.HI","name":"科技指數","nameEn":"HSTECH","sector":"指數","last":4766.1602,"chgPct":0.5551,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":45,"alerts":[],"reason":"持有","holdHint":"觀望，尚未觸發買／賣窗","raw":{"pctb":0.3423,"vb":2.0,"vs":3.0,"rsi":47.04}},"pctb":0.3423,"vb":2.0,"vs":3.0,"rsi":47.04,"upt":false,"lastBuyAt":"2026-03-24","lastSellAt":"2026-05-12","source":"Yahoo"},{"ticker":"0005.HK","name":"滙豐控股","nameEn":"HSBC","sector":"金融","last":162.9,"chgPct":1.622,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":54,"alerts":[],"reason":"持有／升勢","holdHint":"升勢／觀望，尚未觸發買／賣窗","raw":{"pctb":0.678,"vb":4.0,"vs":3.0,"rsi":56.33}},"pctb":0.678,"vb":4.0,"vs":3.0,"rsi":56.33,"upt":true,"lastBuyAt":null,"lastSellAt":null,"source":"Yahoo"},{"ticker":"2318.HK","name":"中國平安","nameEn":"Ping An","sector":"金融","last":56.2,"chgPct":3.8817,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":56,"alerts":[],"reason":"持有","holdHint":"觀望，尚未觸發買／賣窗","raw":{"pctb":0.608,"vb":3.0,"vs":2.0,"rsi":52.95}},"pctb":0.608,"vb":3.0,"vs":2.0,"rsi":52.95,"upt":false,"lastBuyAt":"2026-03-25","lastSellAt":"2026-05-11","source":"Yahoo"},{"ticker":"2628.HK","name":"中國人壽","nameEn":"China Life","sector":"金融","last":28.06,"chgPct":5.0936,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":69,"alerts":[],"reason":"持有／升勢","holdHint":"升勢／觀望，尚未觸發買／賣窗","raw":{"pctb":0.5882,"vb":4.0,"vs":1.0,"rsi":51.32}},"pctb":0.5882,"vb":4.0,"vs":1.0,"rsi":51.32,"upt":true,"lastBuyAt":"2026-03-25","lastSellAt":"2026-05-12","source":"Yahoo"},{"ticker":"0700.HK","name":"騰訊控股","nameEn":"Tencent","sector":"互聯網","last":457.0,"chgPct":1.2406,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":69,"alerts":[],"reason":"持有","holdHint":"觀望，尚未觸發買／賣窗","raw":{"pctb":0.48,"vb":4.0,"vs":1.0,"rsi":49.21}},"pctb":0.48,"vb":4.0,"vs":1.0,"rsi":49.21,"upt":false,"lastBuyAt":"2026-04-29","lastSellAt":"2026-06-15","source":"Yahoo"},{"ticker":"1024.HK","name":"快手-W","nameEn":"Kuaishou","sector":"互聯網","last":34.42,"chgPct":2.3187,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":69,"alerts":[],"reason":"持有","holdHint":"觀望，尚未觸發買／賣窗","raw":{"pctb":-0.1607,"vb":5.0,"vs":2.0,"rsi":26.68}},"pctb":-0.1607,"vb":5.0,"vs":2.0,"rsi":26.68,"upt":false,"lastBuyAt":"2026-06-29","lastSellAt":"2026-08-03","source":"Yahoo"},{"ticker":"0992.HK","name":"聯想集團","nameEn":"Lenovo","sector":"科技硬件","last":29.78,"chgPct":0.2019,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":55,"alerts":[],"reason":"持有／升勢","holdHint":"升勢／觀望，尚未觸發買／賣窗","raw":{"pctb":0.6353,"vb":4.0,"vs":3.0,"rsi":58.24}},"pctb":0.6353,"vb":4.0,"vs":3.0,"rsi":58.24,"upt":true,"lastBuyAt":"2025-11-20","lastSellAt":null,"source":"Yahoo"},{"ticker":"0981.HK","name":"中芯國際","nameEn":"SMIC","sector":"半導體","last":72.5,"chgPct":0.5548,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":39,"alerts":[],"reason":"持有／升勢","holdHint":"升勢／觀望，尚未觸發買／賣窗","raw":{"pctb":0.6282,"vb":2.0,"vs":3.0,"rsi":53.04}},"pctb":0.6282,"vb":2.0,"vs":3.0,"rsi":53.04,"upt":true,"lastBuyAt":"2026-03-24","lastSellAt":"2026-06-01","source":"Yahoo"},{"ticker":"1347.HK","name":"華虹半導體","nameEn":"Hua Hong","sector":"半導體","last":114.8,"chgPct":2.5916,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":69,"alerts":[],"reason":"持有","holdHint":"觀望，尚未觸發買／賣窗","raw":{"pctb":0.0486,"vb":5.0,"vs":2.0,"rsi":38.2}},"pctb":0.0486,"vb":5.0,"vs":2.0,"rsi":38.2,"upt":false,"lastBuyAt":null,"lastSellAt":null,"source":"Yahoo"},{"ticker":"9988.HK","name":"阿里巴巴-W","nameEn":"Alibaba","sector":"互聯網","last":123.0,"chgPct":-2.5357,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":31,"alerts":[],"reason":"持有／升勢","holdHint":"升勢／觀望，尚未觸發買／賣窗","raw":{"pctb":0.5872,"vb":1.0,"vs":4.0,"rsi":54.53}},"pctb":0.5872,"vb":1.0,"vs":4.0,"rsi":54.53,"upt":true,"lastBuyAt":"2026-06-29","lastSellAt":"2026-08-06","source":"Yahoo"},{"ticker":"9888.HK","name":"百度集團-SW","nameEn":"Baidu","sector":"互聯網","last":93.2,"chgPct":1.1394,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":69,"alerts":[],"reason":"持有","holdHint":"觀望，尚未觸發買／賣窗","raw":{"pctb":0.0305,"vb":6.0,"vs":1.0,"rsi":34.71}},"pctb":0.0305,"vb":6.0,"vs":1.0,"rsi":34.71,"upt":false,"lastBuyAt":"2026-08-20","lastSellAt":"2026-05-12","source":"Yahoo"},{"ticker":"6030.HK","name":"中信證券","nameEn":"CITIC Sec","sector":"金融","last":26.24,"chgPct":1.4694,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":69,"alerts":[],"reason":"持有","holdHint":"觀望，尚未觸發買／賣窗","raw":{"pctb":0.2697,"vb":7.0,"vs":1.0,"rsi":43.33}},"pctb":0.2697,"vb":7.0,"vs":1.0,"rsi":43.33,"upt":false,"lastBuyAt":"2026-03-10","lastSellAt":"2026-05-07","source":"Yahoo"},{"ticker":"3908.HK","name":"中金公司","nameEn":"CICC","sector":"金融","last":21.04,"chgPct":2.5341,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":69,"alerts":[],"reason":"持有／升勢","holdHint":"升勢／觀望，尚未觸發買／賣窗","raw":{"pctb":0.4087,"vb":4.0,"vs":0.0,"rsi":47.62}},"pctb":0.4087,"vb":4.0,"vs":0.0,"rsi":47.62,"upt":true,"lastBuyAt":"2026-03-25","lastSellAt":"2026-04-13","source":"Yahoo"},{"ticker":"3690.HK","name":"美團-W","nameEn":"Meituan","sector":"互聯網","last":85.0,"chgPct":-0.9901,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":69,"alerts":[],"reason":"持有／升勢","holdHint":"升勢／觀望，尚未觸發買／賣窗","raw":{"pctb":0.2282,"vb":5.0,"vs":2.0,"rsi":43.63}},"pctb":0.2282,"vb":5.0,"vs":2.0,"rsi":43.63,"upt":true,"lastBuyAt":"2026-06-29","lastSellAt":"2026-03-27","source":"Yahoo"},{"ticker":"1299.HK","name":"友邦保險","nameEn":"AIA","sector":"金融","last":75.15,"chgPct":3.299,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":40,"alerts":[],"reason":"持有","holdHint":"觀望，尚未觸發買／賣窗","raw":{"pctb":0.5931,"vb":2.0,"vs":3.0,"rsi":51.76}},"pctb":0.5931,"vb":2.0,"vs":3.0,"rsi":51.76,"upt":false,"lastBuyAt":"2026-06-11","lastSellAt":"2026-07-15","source":"Yahoo"},{"ticker":"1211.HK","name":"比亞迪股份","nameEn":"BYD","sector":"汽車","last":93.15,"chgPct":1.4706,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":44,"alerts":["grind"],"reason":"持有／磨貨／升勢","holdHint":"升勢／觀望，尚未觸發買／賣窗","raw":{"pctb":0.8149,"vb":4.0,"vs":4.0,"rsi":59.11}},"pctb":0.8149,"vb":4.0,"vs":4.0,"rsi":59.11,"upt":true,"lastBuyAt":"2026-06-12","lastSellAt":"2026-07-31","source":"Yahoo"},{"ticker":"1810.HK","name":"小米集團-W","nameEn":"Xiaomi","sector":"科技硬件","last":29.02,"chgPct":4.5389,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":51,"alerts":[],"reason":"持有／升勢","holdHint":"升勢／觀望，尚未觸發買／賣窗","raw":{"pctb":0.854,"vb":4.0,"vs":3.0,"rsi":60.58}},"pctb":0.854,"vb":4.0,"vs":3.0,"rsi":60.58,"upt":true,"lastBuyAt":"2026-07-02","lastSellAt":"2026-07-17","source":"Yahoo"},{"ticker":"0688.HK","name":"中國海外發展","nameEn":"COLI","sector":"地產","last":14.1,"chgPct":-0.3534,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":51,"alerts":[],"reason":"持有／升勢","holdHint":"升勢／觀望，尚未觸發買／賣窗","raw":{"pctb":0.8567,"vb":3.0,"vs":2.0,"rsi":62.03}},"pctb":0.8567,"vb":3.0,"vs":2.0,"rsi":62.03,"upt":true,"lastBuyAt":"2026-04-01","lastSellAt":"2026-05-12","source":"Yahoo"},{"ticker":"0388.HK","name":"香港交易所","nameEn":"HKEX","sector":"金融","last":421.0,"chgPct":0.7659,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":38,"alerts":[],"reason":"持有／升勢","holdHint":"升勢／觀望，尚未觸發買／賣窗","raw":{"pctb":1.0922,"vb":3.0,"vs":3.0,"rsi":66.56}},"pctb":1.0922,"vb":3.0,"vs":3.0,"rsi":66.56,"upt":true,"lastBuyAt":null,"lastSellAt":null,"source":"Yahoo"},{"ticker":"9999.HK","name":"網易-S","nameEn":"NetEase","sector":"互聯網","last":202.0,"chgPct":4.4467,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":69,"alerts":[],"reason":"持有／升勢","holdHint":"升勢／觀望，尚未觸發買／賣窗","raw":{"pctb":0.657,"vb":4.0,"vs":1.0,"rsi":54.2}},"pctb":0.657,"vb":4.0,"vs":1.0,"rsi":54.2,"upt":true,"lastBuyAt":"2026-02-16","lastSellAt":null,"source":"Yahoo"},{"ticker":"0386.HK","name":"中國石油化工","nameEn":"Sinopec","sector":"能源","last":4.405,"chgPct":0.8009,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":43,"alerts":[],"reason":"持有／升勢","holdHint":"升勢／觀望，尚未觸發買／賣窗","raw":{"pctb":0.8526,"vb":3.0,"vs":3.0,"rsi":60.4}},"pctb":0.8526,"vb":3.0,"vs":3.0,"rsi":60.4,"upt":true,"lastBuyAt":null,"lastSellAt":null,"source":"Yahoo"},{"ticker":"0883.HK","name":"中國海洋石油","nameEn":"CNOOC","sector":"能源","last":25.18,"chgPct":2.1087,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":31,"alerts":["grind"],"reason":"持有／磨貨／升勢","holdHint":"升勢／觀望，尚未觸發買／賣窗","raw":{"pctb":1.0591,"vb":3.0,"vs":4.0,"rsi":66.31}},"pctb":1.0591,"vb":3.0,"vs":4.0,"rsi":66.31,"upt":true,"lastBuyAt":null,"lastSellAt":null,"source":"Yahoo"},{"ticker":"0857.HK","name":"中國石油股份","nameEn":"PetroChina","sector":"能源","last":10.13,"chgPct":0.997,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":33,"alerts":[],"reason":"持有／升勢","holdHint":"升勢／觀望，尚未觸發買／賣窗","raw":{"pctb":0.9361,"vb":3.0,"vs":4.0,"rsi":61.83}},"pctb":0.9361,"vb":3.0,"vs":4.0,"rsi":61.83,"upt":true,"lastBuyAt":null,"lastSellAt":null,"source":"Yahoo"},{"ticker":"2269.HK","name":"藥明生物","nameEn":"Wuxi Bio","sector":"醫療","last":51.0,"chgPct":2.7397,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":39,"alerts":[],"reason":"持有／升勢","holdHint":"升勢／觀望，尚未觸發買／賣窗","raw":{"pctb":1.0538,"vb":4.0,"vs":4.0,"rsi":79.83}},"pctb":1.0538,"vb":4.0,"vs":4.0,"rsi":79.83,"upt":true,"lastBuyAt":null,"lastSellAt":"2026-07-07","source":"Yahoo"},{"ticker":"1209.HK","name":"華潤萬象生活","nameEn":"CR Mixc","sector":"地產","last":41.2,"chgPct":1.3281,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":59,"alerts":[],"reason":"持有／升勢","holdHint":"升勢／觀望，尚未觸發買／賣窗","raw":{"pctb":0.8519,"vb":4.0,"vs":2.0,"rsi":58.92}},"pctb":0.8519,"vb":4.0,"vs":2.0,"rsi":58.92,"upt":true,"lastBuyAt":"2026-06-29","lastSellAt":"2026-08-04","source":"Yahoo"},{"ticker":"0941.HK","name":"中國移動","nameEn":"China Mobile","sector":"電訊","last":82.8,"chgPct":0.4854,"signal":{"kind":"hold","labelZh":"持有","labelEn":"Hold","strength":53,"alerts":[],"reason":"持有／升勢","holdHint":"升勢／觀望，尚未觸發買／賣窗","raw":{"pctb":0.7251,"vb":3.0,"vs":2.0,"rsi":59.02}},"pctb":0.7251,"vb":3.0,"vs":2.0,"rsi":59.02,"upt":true,"lastBuyAt":null,"lastSellAt":null,"source":"Yahoo"}],"source":"Yahoo auto_adjust daily; Futu MDX v4b replica","disclaimer":"非投資建議。不下單。日線訊號用 ≤T 收市；盤中為觀察值。","grokMe":"https://stone-leaf-finch-crane.grok.me","pagesUrl":"https://aforwandre.github.io/Andre/MDX_Scan/"}</script>
+<script type="module">
+const KIND={strong_buy:"強買",buy:"買入",hold:"持有",sell:"賣出",strong_sell:"強賣"};
+const ALERT={wash:"洗籌",dump:"散貨",grind:"磨貨",revu:"逆轉↑",revd:"逆轉↓",squeeze:"擠壓",contu:"續升"};
+let board=JSON.parse(document.getElementById("board").textContent);
+try{
+  const r=await fetch("./board.json?t="+Date.now(),{cache:"no-store"});
+  if(r.ok){const live=await r.json(); if(live&&live.rows) board=live;}
+}catch(e){}
+const fmtPct=v=>Number.isFinite(v)?`${v>0?"+":""}${v.toFixed(2)}%`:"—";
+const fmtPx=v=>Number.isFinite(v)?v.toLocaleString("en-HK",{minimumFractionDigits:2,maximumFractionDigits:2}):"—";
+const sub=document.getElementById("sub");
+sub.textContent=`三大指數 + 25 隻獨立計算 · 日線 MDX${board.asOf?` · 行情截至 ${board.asOf}`:""}`;
+const rg=board.regime||{};
+document.getElementById("regime").innerHTML=`
+  <div class="k">市場 Regime</div>
+  <div class="reg ${rg.id||"neutral"}">${rg.labelZh||"—"} <span style="font-size:13px;font-weight:400;color:var(--muted)">${rg.labelEn||""}</span></div>
+  <p class="note">${rg.note||""}</p>
+  <div class="snaps">
+    ${(board.snapshots||[]).map(s=>`<div><div class="k">${s.name}</div><div>${fmtPx(s.last)} <span class="${s.chgPct>=0?"buy":"sell"}">${fmtPct(s.chgPct)}</span></div></div>`).join("")}
+    <div><div class="k">Vol 20/60</div><div>${(rg.hsiVol20??0).toFixed(1)} / ${(rg.hsiVol60??0).toFixed(1)}</div></div>
+    <div><div class="k">籃子上漲比</div><div>${((rg.breadth||0)*100).toFixed(0)}%</div></div>
+    <div><div class="k">信心</div><div>${rg.confidence??"—"}</div></div>
+  </div>`;
+const tb=document.getElementById("rows");
+for(const r of board.rows||[]){
+  const s=r.signal||{};
+  const kind=s.kind||"hold";
+  const chg=r.chgPct;
+  const alerts=(s.alerts||[]).map(a=>`<span class="alert">${ALERT[a]||a}</span>`).join("")||"—";
+  const w=Math.max(0,Math.min(100,s.strength||0));
+  const barCol=w>=70?"var(--buy)":w<=30?"var(--sell)":"var(--hold)";
+  const tr=document.createElement("tr");
+  tr.innerHTML=`
+    <td class="mono">${r.ticker}</td>
+    <td>${r.name||""}</td>
+    <td class="mono">${fmtPx(r.last)}</td>
+    <td class="mono ${chg>0?"buy":chg<0?"sell":""}">${fmtPct(chg)}</td>
+    <td><span class="badge k-${kind}">${KIND[kind]||kind}</span></td>
+    <td class="mono"><span class="bar"><i style="width:${w}%;background:${barCol}"></i></span>${s.strength??"—"}</td>
+    <td class="mono hide-sm">${Number.isFinite(r.pctb)?r.pctb.toFixed(2):"—"}</td>
+    <td class="mono hide-sm">${Number.isFinite(r.rsi)?r.rsi.toFixed(0):"—"}</td>
+    <td class="hide-sm">${alerts}</td>
+    <td class="mono hide-sm">${r.lastBuyAt||"—"}</td>`;
+  tb.appendChild(tr);
+}
+document.getElementById("foot").innerHTML=
+  `${board.disclaimer||"非投資建議。"} 來源：${board.source||""} · 發佈 ${board.publishedAt||""} · <a href="${board.pagesUrl||"https://aforwandre.github.io/Andre/MDX_Scan/"}">aforwandre.github.io/Andre/MDX_Scan</a>`;
+</script>
 </body>
 </html>

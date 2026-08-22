@@ -12,7 +12,7 @@ header{padding:calc(12px + env(safe-area-inset-top)) 16px;border-bottom:1px soli
 a{color:#5eead4;text-decoration:none;} nav a{color:#8b97a6;margin-left:12px;}
 .wrap{max-width:960px;margin:0 auto;padding:20px;}
 .grid{display:grid;gap:10px;}
-@media(min-width:720px){.grid{grid-template-columns:1fr 1fr 1fr;}}
+@media(min-width:720px){.grid{grid-template-columns:1fr 1fr;}}
 .card{background:#11161c;border-radius:16px;padding:16px;box-shadow:0 0 0 1px rgba(255,255,255,.07);}
 .h{font-size:16px;margin:0 0 6px;} .m{color:#8b97a6;font-size:13px;line-height:1.55;}
 .on{color:#3dcf9a;font-family:ui-monospace,monospace;font-size:11px;}
@@ -21,12 +21,10 @@ a{color:#5eead4;text-decoration:none;} nav a{color:#8b97a6;margin-left:12px;}
 <header><a href="./">MDX Monitor</a><nav><a href="./">訊號板</a><a href="./formulas.html">公式</a><a href="./sources.html">數據源</a></nav></header>
 <div class="wrap">
 <h1>數據源</h1>
-<p class="m">即時報價與日線 K 線以騰訊行情為準（截至最近一個港股交易時段）。Wind／TDX／同花順 MCP 作為擴展；Yahoo 僅在主源失敗時補 K 線。</p>
+<p class="m">這個公開頁由 HK_Stock_Signal 每次掃描覆蓋。日線 MDX 用 Yahoo 後復權；訊號 ≤T 收市。非投資建議。</p>
 <div class="grid">
-<div class="card"><div class="h">騰訊行情 <span class="on">主源</span></div><p class="m">恒指／國指／科技指數 + 25 隻預設名單的最新成交與日線。本快照行情截至 2026-08-21 18:31 HKT。</p></div>
-<div class="card"><div class="h">Wind MCP</div><p class="m">wind-stock / index / fund / bond / docs / economic / analytics。</p></div>
-<div class="card"><div class="h">TDX MCP</div><p class="m">mcp.tdx.com.cn:3001 通達信擴展。</p></div>
-<div class="card"><div class="h">同花順 iFind</div><p class="m">hexin-ifind ds-stock / fund / edb / news / bond / global / index / futures。</p></div>
-<div class="card"><div class="h">Yahoo Finance</div><p class="m">備用 K 線。HSTECH 代碼為 HSTECH.HK。</p></div>
+<div class="card"><div class="h">Yahoo Finance <span class="on">本頁主源</span></div><p class="m">恒指 ^HSI、國指 ^HSCE、科技指數現價 HSTECH.HK（通道用 3032.HK 追蹤 ETF）+ 25 隻港股日 K。</p></div>
+<div class="card"><div class="h">GitHub Pages</div><p class="m">覆蓋路徑 aforwandre.github.io/Andre/MDX_Scan/（board.json + index.html）。</p></div>
+<div class="card"><div class="h">grok.me 即時版</div><p class="m">stone-leaf-finch-crane.grok.me 仍自己拉騰訊行情，沒有公開寫入 API。</p></div>
 </div>
 </div></body></html>
