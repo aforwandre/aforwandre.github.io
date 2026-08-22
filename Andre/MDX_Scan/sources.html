@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#090b0e"/>
+<title>MDX 數據源</title>
+<link rel="icon" type="image/svg+xml" href="./icon.svg"/>
+<style>
+body{margin:0;background:#090b0e;color:#e8eef4;font-family:-apple-system,"Noto Sans TC",sans-serif;}
+header{padding:calc(12px + env(safe-area-inset-top)) 16px;border-bottom:1px solid #24303c;display:flex;justify-content:space-between;}
+a{color:#5eead4;text-decoration:none;} nav a{color:#8b97a6;margin-left:12px;}
+.wrap{max-width:960px;margin:0 auto;padding:20px;}
+.grid{display:grid;gap:10px;}
+@media(min-width:720px){.grid{grid-template-columns:1fr 1fr 1fr;}}
+.card{background:#11161c;border-radius:16px;padding:16px;box-shadow:0 0 0 1px rgba(255,255,255,.07);}
+.h{font-size:16px;margin:0 0 6px;} .m{color:#8b97a6;font-size:13px;line-height:1.55;}
+.on{color:#3dcf9a;font-family:ui-monospace,monospace;font-size:11px;}
+</style></head>
+<body>
+<header><a href="./">MDX Monitor</a><nav><a href="./">訊號板</a><a href="./formulas.html">公式</a><a href="./sources.html">數據源</a></nav></header>
+<div class="wrap">
+<h1>數據源</h1>
+<p class="m">即時報價與日線 K 線以騰訊行情為準（截至最近一個港股交易時段）。Wind／TDX／同花順 MCP 作為擴展；Yahoo 僅在主源失敗時補 K 線。</p>
+<div class="grid">
+<div class="card"><div class="h">騰訊行情 <span class="on">主源</span></div><p class="m">恒指／國指／科技指數 + 25 隻預設名單的最新成交與日線。本快照行情截至 2026-08-21 18:31 HKT。</p></div>
+<div class="card"><div class="h">Wind MCP</div><p class="m">wind-stock / index / fund / bond / docs / economic / analytics。</p></div>
+<div class="card"><div class="h">TDX MCP</div><p class="m">mcp.tdx.com.cn:3001 通達信擴展。</p></div>
+<div class="card"><div class="h">同花順 iFind</div><p class="m">hexin-ifind ds-stock / fund / edb / news / bond / global / index / futures。</p></div>
+<div class="card"><div class="h">Yahoo Finance</div><p class="m">備用 K 線。HSTECH 代碼為 HSTECH.HK。</p></div>
+</div>
+</div></body></html>

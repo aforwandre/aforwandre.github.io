@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#090b0e"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<title>MDX 公式</title>
+<link rel="icon" type="image/svg+xml" href="./icon.svg"/>
+<style>
+body{margin:0;background:#090b0e;color:#e8eef4;font-family:-apple-system,"Noto Sans TC",sans-serif;}
+header{padding:calc(12px + env(safe-area-inset-top)) 16px;border-bottom:1px solid #24303c;display:flex;justify-content:space-between;}
+a{color:#5eead4;text-decoration:none;} nav a{color:#8b97a6;margin-left:12px;}
+.wrap{max-width:960px;margin:0 auto;padding:20px;}
+.grid{display:grid;gap:12px;}
+@media(min-width:800px){.grid{grid-template-columns:1fr 1fr 1fr;}}
+.card,.box{background:#11161c;border-radius:16px;padding:16px;box-shadow:0 0 0 1px rgba(255,255,255,.07);}
+.id{font-family:ui-monospace,monospace;color:#5eead4;font-size:12px;}
+h1{font-size:22px;} h2{font-size:16px;margin:6px 0;} .m{color:#8b97a6;font-size:13px;line-height:1.55;}
+ul{margin:8px 0 0 18px;color:#8b97a6;font-size:13px;}
+</style></head>
+<body>
+<header><a href="./">MDX Monitor</a><nav><a href="./">訊號板</a><a href="./formulas.html">公式</a><a href="./sources.html">數據源</a></nav></header>
+<div class="wrap">
+<h1>MDX 公式</h1>
+<p class="m">六套富途麥語言已移植為同一引擎：三套主圖通道 + 三套副圖訊號。參數固定 N1=20 N2=60 N3=14 N5=9（不要設 N6，冷卻改硬編碼）。</p>
+<div class="grid">
+<article class="card"><div class="id">MDX</div><h2>日線多維通道 v4b</h2><p class="m">主圖 · 縮寫 MDX</p><ul>
+<li>趨勢錨：EMA60。通道：EMA20 ± 1.8 × MIX（0.5 STD + 0.5 ATR Wilder）。</li>
+<li>買入窗 BOT：近 5 日低點貼近 60 日低、%B &lt; 0.18、收復、距 60 日高 &lt; −18%、非散貨。</li>
+<li>賣出窗：VS 上穿 5 且非洗籌。冷卻 8 根。賣出需 40 根內有過買入。</li>
+</ul></article>
+<article class="card"><div class="id">MDX5</div><h2>5 分鐘多維通道 v4c</h2><p class="m">主圖 · 縮寫 MDX5</p><ul>
+<li>與日線同結構，門檻縮放：洗籌跌幅 −0.5%、散貨 −0.6%、BOT 距高 −2.5%。</li>
+<li>時段閘：10:20–15:45（買／賣）。洗籌／散貨／逆轉全日可標。</li>
+<li>冷卻 8 根 ≈ 40 分鐘。</li>
+</ul></article>
+<article class="card"><div class="id">MDX1</div><h2>分時通道 v2</h2><p class="m">分時圖 · 縮寫 MDX1</p><ul>
+<li>趨勢錨改 VWAP（500 根吃全日）。高低用 HHV/LLV(500)。</li>
+<li>買／賣 09:45–15:45。冷卻 12 點。</li>
+<li>不要貼上 1 分 K 線或日線 MDX。</li>
+</ul></article>
+</div>
+<div class="box" style="margin-top:16px">
+<h2>訊號合成</h2>
+<p class="m"><b>VB 多頭分</b>：價在趨勢錨上 + 回踩通道 + RSI&lt;45 + KDJ 金叉或 J&lt;20 + 資金流入或 MFI 超賣 + 洗籌／鎚子 + MACD 柱轉強 + CCI/WR 超賣 − 2×散貨。</p>
+<p class="m"><b>VS 空頭分</b>：價在趨勢錨下 + 高位 %B + RSI&gt;55 + 死叉或 J&gt;80 + 資金流出 + 散貨／磨貨 + MACD 走弱 − 2×洗籌。VS 上穿 5 觸發賣窗。</p>
+<p class="m">Regime（恒指波動、五日漲跌、籃子上漲比、科技相對）只調整強買／強賣門檻，不改寫原始 BOT／VS 公式。每隻股票獨立輸出，沒有組合權重。</p>
+</div>
+</div></body></html>
