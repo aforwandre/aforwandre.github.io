@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>隱私權政策 — mailcal</title>
+<meta name="description" content="mailcal 的隱私權政策：如何存取、使用、儲存與刪除 Google 使用者資料。">
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.75 -apple-system, "PingFang TC", "Noto Sans TC", system-ui, sans-serif;
+         background: #f6f8fb; color: #1b2430; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 56px 24px 96px; }
+  h1 { font-size: 1.7rem; margin: 0 0 6px; letter-spacing: -.02em; }
+  .sub { color: #5b6b7f; margin: 0 0 34px; font-size: .95rem; }
+  h2 { font-size: 1.02rem; margin: 30px 0 8px; }
+  p, li { margin: 6px 0; }
+  ul { padding-left: 1.2em; }
+  a { color: #1d4ed8; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0 4px; font-size: .94rem; }
+  th, td { border: 1px solid #e3e9f2; padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: #f0f4fa; font-weight: 600; }
+  footer { color: #7a8899; font-size: .875rem; margin-top: 40px; border-top: 1px solid #e3e9f2; padding-top: 18px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>隱私權政策</h1>
+  <p class="sub">適用於 mailcal（個人自用工具）· 最後更新：2026 年 11 月 2 日</p>
+
+  <p>mailcal 是一個僅供個人使用的本機工具，用於讀取與整理<strong>使用者本人</strong>的 Gmail 郵件與 Google 日曆。本政策說明它如何存取、使用、儲存與刪除 Google 使用者資料。</p>
+
+  <h2>1. 我們存取哪些資料</h2>
+  <table>
+    <tr><th>資料</th><th>用途</th></tr>
+    <tr><td>Gmail 郵件（標題、寄件人、內文、附件清單）</td><td>依使用者指令搜尋、摘要、回覆；標記已讀、封存</td></tr>
+    <tr><td>Gmail 寄件能力</td><td>依使用者指令寄送或建立草稿</td></tr>
+    <tr><td>Google 日曆行程</td><td>依使用者指令查看、建立、修改、刪除行程</td></tr>
+    <tr><td>授權帳號的電郵地址</td><td>確認授權身分，避免存取錯誤帳號</td></tr>
+  </table>
+  <p>mailcal 不會存取與上述用途無關的 Google 資料，也不會讀取 Google Drive、聯絡人、相片等其他服務。</p>
+
+  <h2>2. 資料如何使用</h2>
+  <ul>
+    <li>僅用於執行使用者當下明確要求的操作（例如「列出未讀信件」、「建立明天九點的會議」）。</li>
+    <li>不會用於廣告、行銷、個人剖析、模型訓練，或任何與該操作無關的目的。</li>
+    <li>不會將 Google 使用者資料出售、出租或提供給任何第三方。</li>
+    <li>不會用於判斷信用、保險或就業資格。</li>
+  </ul>
+
+  <h2>3. 資料儲存在哪裡</h2>
+  <ul>
+    <li><strong>郵件與行程內容不會被長期保存。</strong>它們在執行操作時即時向 Google API 取得，僅存在於當次執行階段的記憶體中。</li>
+    <li>本機僅保存<strong>授權權杖</strong>（access token 與 refresh token），存放於使用者電腦上的加密檔案（AES-256-GCM，主金鑰與密文分開存放、權限 600）。</li>
+    <li>mailcal 沒有伺服器端資料庫，也沒有任何中間伺服器；所有 API 呼叫由使用者電腦直接發往 Google。</li>
+    <li>若使用者選擇將工具安裝在雲端同步資料夾（例如 iCloud Drive），該資料夾內只有加密後的權杖密文。</li>
+  </ul>
+
+  <h2>4. 資料分享</h2>
+  <p>不分享。除了使用者本人、以及為完成使用者指令而呼叫的 Google API 之外，沒有任何第三方會接觸到這些資料。</p>
+
+  <h2>5. 保留期限與刪除</h2>
+  <ul>
+    <li>權杖保留至使用者撤銷授權或刪除為止。</li>
+    <li>使用者可隨時執行工具內的登出指令刪除本機權杖。</li>
+    <li>使用者亦可於 <a href="https://myaccount.google.com/permissions" rel="noopener">Google 帳號「第三方應用程式與服務」頁面</a> 撤銷授權；撤銷後本機權杖立即失效。</li>
+    <li>郵件與行程本身仍屬於使用者的 Google 帳號，mailcal 不另存副本，因此無需額外刪除。</li>
+  </ul>
+
+  <h2>6. 安全性</h2>
+  <ul>
+    <li>全程使用 HTTPS 呼叫 Google API。</li>
+    <li>授權流程採用 OAuth 2.0 授權碼流程搭配 PKCE 與 state 防護（防攔截與 CSRF）。</li>
+    <li>權杖以 AES-256-GCM 加密儲存，檔案權限僅限本人可讀。</li>
+    <li>不收集密碼；登入完全由 Google 頁面處理。</li>
+  </ul>
+
+  <h2>7. 兒童</h2>
+  <p>本工具非供兒童使用，也不會有意收集兒童資料。</p>
+
+  <h2>8. 政策變更</h2>
+  <p>若資料處理方式有實質變更，本頁會更新並修改上方「最後更新」日期。</p>
+
+  <h2>9. 聯絡方式</h2>
+  <p>隱私相關問題：<a href="mailto:aforwandre@gmail.com">aforwandre@gmail.com</a></p>
+
+  <footer>
+    <a href="./index.html">← 回到首頁</a>
+  </footer>
+</div>
+</body>
+</html>
